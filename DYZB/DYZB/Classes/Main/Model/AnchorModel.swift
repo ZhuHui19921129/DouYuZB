@@ -15,7 +15,7 @@ class AnchorModel: NSObject {
     //房间图片对应的URL
     var vertical_src : String = ""
     //判断是手机直播还是电脑直播 0电脑  1手机
-    var isVertcal : Int = 0
+    var isVertical : Int = 0
     //房间名称
     var room_name : String = ""
     //主播名
@@ -26,7 +26,7 @@ class AnchorModel: NSObject {
     var anchor_city : String = ""
     
     
-    init(dict:[String:NSObject]) {
+    init(dict:[String:Any]) {
         super.init()
         
         setValuesForKeys(dict)

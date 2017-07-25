@@ -8,9 +8,8 @@
 
 import UIKit
 
-class RecommendViewModel {
+class RecommendViewModel :BaseViewModel {
 
-    lazy var anchorGroups : [AnchorGroup] = [AnchorGroup]()
     lazy var cycleModels : [CycleModel] = [CycleModel]()
     lazy var bigDataGroup : AnchorGroup = AnchorGroup()
     lazy var prettyGroup : AnchorGroup = AnchorGroup()
@@ -59,35 +58,19 @@ extension RecommendViewModel{
         
         //请求2-12部分游戏数据
         dGroup.enter()
-        NetworkTools.requestData(.GET, URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters) { (result) in
+        loadAnchorData(isGroupData:true,URLString: "http://capi.douyucdn.cn/api/v1/getHotCate", parameters: parameters){
             
-            guard let resultDict = result as? [String : NSObject] else {return}
-            guard let dataArray = resultDict["data"] as? [[String : NSObject]] else {return}
-            
-            for dict in dataArray{
-                let group = AnchorGroup(dict: dict)
-                self.anchorGroups.append(group)
-            }
             dGroup.leave()
-            /*
-            for group in self.anchorGroups{
-                for anchor in group.anchors{
-                    print(anchor.nickname)
-                }
-                print("----")
-            }
-            */
         }
-
         //所有数据请求以后
-        dGroup.notify(queue: DispatchQueue.main, execute:{
+        dGroup.notify(queue: DispatchQueue.main){
             self.anchorGroups.insert(self.prettyGroup, at: 0)
             self.anchorGroups.insert(self.bigDataGroup, at: 0)
             
             finishedCallback()
-        })
+        }
+
     }
-    
     
     //请求无限轮播的数据
     func requestCycleData(finishCallback:@escaping ()-> ()) {
